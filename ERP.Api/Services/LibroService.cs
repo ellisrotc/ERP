@@ -16,16 +16,26 @@ public class LibroService(ErpDbContext db) : ILibroService
 {
     public async Task<(LibroContableDto, List<LibroDetalleDto>)> GenerarVentasAsync(string periodo, int idUsuario)
     {
-        var idLibro = await db.Database.SqlQuery<int>(
-            $"SELECT sp_generar_libro_ventas({periodo}, {idUsuario})").FirstOrDefaultAsync();
-        return await GetLibroDetalle(idLibro);
+        await db.Database.ExecuteSqlInterpolatedAsync(
+            $"SELECT sp_generar_libro_ventas({periodo}, {idUsuario})");
+        var libro = await db.LibrosContables
+            .Where(l => l.Tipo == "VENTAS" && l.Periodo == periodo)
+            .OrderByDescending(l => l.IdLibro)
+            .FirstOrDefaultAsync()
+            ?? throw new KeyNotFoundException($"No se generó el libro de ventas para {periodo}");
+        return await GetLibroDetalle(libro.IdLibro);
     }
 
     public async Task<(LibroContableDto, List<LibroDetalleDto>)> GenerarComprasAsync(string periodo, int idUsuario)
     {
-        var idLibro = await db.Database.SqlQuery<int>(
-            $"SELECT sp_generar_libro_compras({periodo}, {idUsuario})").FirstOrDefaultAsync();
-        return await GetLibroDetalle(idLibro);
+        await db.Database.ExecuteSqlInterpolatedAsync(
+            $"SELECT sp_generar_libro_compras({periodo}, {idUsuario})");
+        var libro = await db.LibrosContables
+            .Where(l => l.Tipo == "COMPRAS" && l.Periodo == periodo)
+            .OrderByDescending(l => l.IdLibro)
+            .FirstOrDefaultAsync()
+            ?? throw new KeyNotFoundException($"No se generó el libro de compras para {periodo}");
+        return await GetLibroDetalle(libro.IdLibro);
     }
 
     public async Task<byte[]> ExportarExcelVentasAsync(string periodo, int idUsuario)
