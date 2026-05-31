@@ -1,0 +1,9 @@
+.env
+bin/
+obj/
+*.user
+.vs/
+logs/
+*.log
+*.pfx
+postgres_data/

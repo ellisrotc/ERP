@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ERP.Api/ERP.Api.csproj" />
+  <Project Path="ERP.Shared/ERP.Shared.csproj" />
+  <Project Path="ERP.Tests/ERP.Tests.csproj" />
+  <Project Path="ERP.WinForms/ERP.WinForms.csproj" />
+</Solution>
