@@ -15,3 +15,7 @@ public record LibroDetalleDto(
     decimal BaseImponible,
     decimal Igv,
     decimal Total);
+
+public record LibroResponseDto(
+    LibroContableDto Libro,
+    List<LibroDetalleDto> Detalles);
